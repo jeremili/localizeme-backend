@@ -6,7 +6,7 @@ import { initDatabase } from './config/database';
 import locationRoutes from './app/location/routes';
 
 const app = express();
-const PORT = process.env.PORT || 9002;
+const PORT = process.env.PORT || 9003;
 
 // Middleware
 app.use(cors());
