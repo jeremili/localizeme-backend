@@ -14,8 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Ensure directories exist
-const uploadsDir = path.join(__dirname, '../uploads');
-const dataDir = path.join(__dirname, '../data');
+const uploadsDir = path.join(import.meta.dirname, '../uploads');
+const dataDir = path.join(import.meta.dirname, '../data');
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });

@@ -3,7 +3,7 @@ import path from 'path';
 
 export const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: path.join(__dirname, '../../data/localizeme.sqlite'),
+  storage: path.join(import.meta.dirname, '../../data/localizeme.sqlite'),
   logging: false,
 });
 
