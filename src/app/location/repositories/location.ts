@@ -1,4 +1,4 @@
-import Location, { LocationAttributes } from '../../models/Location';
+import Location, { LocationAttributes } from '../../../models/Location';
 
 export const locationRepository = {
   async create(data: Omit<LocationAttributes, 'id' | 'createdAt' | 'updatedAt'>): Promise<Location> {

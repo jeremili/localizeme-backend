@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { initDatabase } from './config/database';
-import locationRoutes from './app/location/routes';
+import locationRoutes from './app/location/routes/location';
 
 const app = express();
 const PORT = process.env.PORT || 9003;

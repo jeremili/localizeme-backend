@@ -1,5 +1,5 @@
-import { locationRepository } from './repositories';
-import { LocationAttributes } from '../../models/Location';
+import { locationRepository } from '../repositories/location';
+import { LocationAttributes } from '../../../models/Location';
 
 export const locationService = {
   async createLocation(data: Omit<LocationAttributes, 'id' | 'createdAt' | 'updatedAt'>) {
