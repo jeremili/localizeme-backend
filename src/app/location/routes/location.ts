@@ -48,6 +48,21 @@ router.get('/active-parking', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/tags', async (req: Request, res: Response) => {
+  try {
+    const userId = getUserId(req);
+    const locations = await locationService.getAllLocations(userId);
+    const tagsSet = new Set<string>();
+    locations.forEach(location => {
+      location.tags?.forEach(tag => tagsSet.add(tag));
+    });
+    res.json(Array.from(tagsSet));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch tags';
+    res.status(400).json({ error: message });
+  }
+});
+
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const userId = getUserId(req);

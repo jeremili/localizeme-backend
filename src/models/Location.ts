@@ -10,6 +10,7 @@ export interface LocationAttributes {
   latitude: number;
   longitude: number;
   rating?: number;
+  tags?: string[];
   comment?: string;
   photos: string[];
   isActive: boolean;
@@ -28,6 +29,7 @@ class Location extends Model<LocationAttributes, LocationCreationAttributes> imp
   public latitude!: number;
   public longitude!: number;
   public rating?: number;
+  public tags?: string[];
   public comment?: string;
   public photos!: string[];
   public isActive!: boolean;
@@ -73,6 +75,10 @@ Location.init(
         min: 1,
         max: 5,
       },
+    },
+    tags: {
+      type: DataTypes.JSON,
+      defaultValue: [],
     },
     comment: {
       type: DataTypes.TEXT,

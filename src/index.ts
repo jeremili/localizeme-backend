@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { initDatabase } from './config/database';
 import locationRoutes from './app/location/routes/location';
+import geocodingRoutes from './app/location/routes/geocoding';
 
 const app = express();
 const PORT = process.env.PORT || 9003;
@@ -29,6 +30,7 @@ app.use('/uploads', express.static(uploadsDir));
 
 // Routes
 app.use('/api/locations', locationRoutes);
+app.use('/api/geocoding', geocodingRoutes);
 
 // Health check
 app.get('/health', (_req, res) => {
