@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
+import LocationFiles from './LocationFiles';
 
 export interface LocationAttributes {
   id: string;
@@ -99,5 +100,11 @@ Location.init(
     timestamps: true,
   }
 );
+
+// Associations
+Location.hasMany(LocationFiles, {
+  foreignKey: 'locationId',
+  as: 'files',
+});
 
 export default Location;

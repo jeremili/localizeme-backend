@@ -89,11 +89,14 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/upload', upload.array('photos', 10), (req: Request, res: Response) => {
+router.post('/upload', upload.array('photos', 10), async (req: Request, res: Response) => {
   try {
     getUserId(req);
     const files = req.files as Express.Multer.File[];
     const filenames = files.map(f => f.filename);
+
+    await locationService.saveLocationFiles(filenames, files);
+
     res.json({ filenames });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to upload photos';
