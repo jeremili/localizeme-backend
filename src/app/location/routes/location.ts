@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import { v7 as uuidv7 } from 'uuid';
-import { locationService } from '../services/location';
+import * as locationService from '../services/location';
 
 const router = Router();
 

@@ -1,53 +1,52 @@
 import Location, { LocationAttributes } from '../../../models/Location';
 import LocationFiles from '../../../models/LocationFiles';
 
-export const locationRepository = {
-  async create(data: Omit<LocationAttributes, 'id' | 'createdAt' | 'updatedAt'>): Promise<Location> {
-    return Location.create(data);
-  },
 
-  async findAllByUser(userId: string): Promise<Location[]> {
-    return Location.findAll({
-      where: { userId },
-      include: [
-        {
-          model: LocationFiles,
-          as: 'files',
-          attributes: ['filename']
-        }
-      ],
-      order: [['createdAt', 'DESC']]
-    });
-  },
+export const create = async (data: Omit<LocationAttributes, 'id' | 'createdAt' | 'updatedAt'>): Promise<Location> => {
+  return Location.create(data);
+};
 
-  async findById(id: string, userId: string): Promise<Location | null> {
-    return Location.findOne({
-      where: { id, userId },
-      include: [
-        {
-          model: LocationFiles,
-          as: 'files',
-          attributes: ['filename']
-        }
-      ]
+export const findAllByUser = async (userId: string): Promise<Location[]> => {
+  return Location.findAll({
+    where: { userId },
+    include: [
+      {
+        model: LocationFiles,
+        as: 'files',
+        attributes: ['filename']
+      }
+    ],
+    order: [['createdAt', 'DESC']]
   });
-  },
+};
 
-  async update(id: string, userId: string, data: Partial<LocationAttributes>): Promise<Location | null> {
-    const location = await Location.findOne({ where: { id, userId } });
-    if (!location) return null;
-    return location.update(data);
-  },
+export const findById = async (id: string, userId: string): Promise<Location | null> => {
+  return Location.findOne({
+    where: { id, userId },
+    include: [
+      {
+        model: LocationFiles,
+        as: 'files',
+        attributes: ['filename']
+      }
+    ]
+  });
+};
 
-  async delete(id: string, userId: string): Promise<boolean> {
-    const deleted = await Location.destroy({ where: { id, userId } });
-    return deleted > 0;
-  },
+export const update = async (id: string, userId: string, data: Partial<LocationAttributes>): Promise<Location | null> => {
+  const location = await Location.findOne({ where: { id, userId } });
+  if (!location) return null;
+  return location.update(data);
+};
 
-  async findActiveParking(userId: string): Promise<Location | null> {
-    return Location.findOne({
-      where: { userId, type: 'parking', isActive: true },
-      order: [['createdAt', 'DESC']],
-    });
-  },
+export const deleteLocation = async (id: string, userId: string): Promise<boolean> => {
+  const deleted = await Location.destroy({ where: { id, userId } });
+  return deleted > 0;
+};
+
+export const findActiveParking = async (userId: string): Promise<Location | null> => {
+  return Location.findOne({
+    where: { userId, type: 'parking', isActive: true },
+    order: [['createdAt', 'DESC']],
+  });
 };
