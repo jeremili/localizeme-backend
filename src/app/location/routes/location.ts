@@ -89,7 +89,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/upload', upload.array('photos', 10), async (req: Request, res: Response) => {
+router.post('/upload', upload.array('files', 10), async (req: Request, res: Response) => {
   try {
     getUserId(req);
     const files = req.files as Express.Multer.File[];
@@ -99,7 +99,7 @@ router.post('/upload', upload.array('photos', 10), async (req: Request, res: Res
 
     res.json({ filenames });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to upload photos';
+    const message = error instanceof Error ? error.message : 'Failed to upload files';
     res.status(400).json({ error: message });
   }
 });

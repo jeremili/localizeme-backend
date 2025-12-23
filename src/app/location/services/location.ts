@@ -5,7 +5,10 @@ import { locationFilesRepository}  from '../repositories/locationFiles';
 export const locationService = {
   async createLocation(data: Omit<LocationAttributes, 'id' | 'createdAt' | 'updatedAt'>) {
     const location = await locationRepository.create(data);
-    await locationFilesRepository.associateFilesWithLocation(data.photos || [], location.id);
+    if (data.files && data.files.length > 0) {
+      const filenames = data.files.map((file: { filename: string }) => file.filename);
+      await locationFilesRepository.associateFilesWithLocation(filenames, location.id);
+    }
     return location;
   },
 
@@ -25,26 +28,32 @@ export const locationService = {
         throw new Error('Location not found');
       }
 
-      // remove photos from uploads if photos are removed from location
+      // remove files from uploads if files are removed from location
       // TODO - Promise mapping for better performance
       // TODO - move to a background job for better performance
-      if (data.photos && location.photos) {
-        const photosToRemove = location.photos.filter(photo => !data.photos!.includes(photo));
+      const files = data.files?.map((file: { filename: string }) => file.filename);
+      if (data.files && location.files) {
+        const existingFiles = location.files.map((file: { filename: string }) => file.filename);
+        const filesToRemove = existingFiles.filter((file: string) => !files?.includes(file));
         const fs = await import('fs');
         const path = await import('path');
-        for (const photo of photosToRemove) {
-          const photoPath = path.join(import.meta.dirname, '../../../../uploads', photo);
-          if (fs.existsSync(photoPath)) {
-            fs.unlinkSync(photoPath);
+        for (const file of filesToRemove) {
+          const filePath = path.join(import.meta.dirname, '../../../../uploads', file);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
           }
 
-          await locationFilesRepository.deleteByFilename(photo);
+          await locationFilesRepository.deleteByFilename(file);
         }
       }
 
-      await locationFilesRepository.associateFilesWithLocation(data.photos || [], id);
+      if (files && files.length > 0) {
+        await locationFilesRepository.associateFilesWithLocation(files, id);
+      }
 
-      return locationRepository.update(id, userId, data);
+      await locationRepository.update(id, userId, data);
+
+      return locationRepository.findById(id, userId);
 
     } catch (error) {
       throw error;

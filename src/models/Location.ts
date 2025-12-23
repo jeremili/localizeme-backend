@@ -13,8 +13,8 @@ export interface LocationAttributes {
   rating?: number;
   tags?: string[];
   comment?: string;
-  photos: string[];
   isActive: boolean;
+  files?: LocationFiles[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -32,8 +32,8 @@ class Location extends Model<LocationAttributes, LocationCreationAttributes> imp
   public rating?: number;
   public tags?: string[];
   public comment?: string;
-  public photos!: string[];
   public isActive!: boolean;
+  public files?: LocationFiles[];
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -84,10 +84,6 @@ Location.init(
     comment: {
       type: DataTypes.TEXT,
       allowNull: true,
-    },
-    photos: {
-      type: DataTypes.JSON,
-      defaultValue: [],
     },
     isActive: {
       type: DataTypes.BOOLEAN,
