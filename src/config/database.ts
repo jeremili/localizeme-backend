@@ -19,7 +19,7 @@ export const initDatabase = async (): Promise<void> => {
     // Temporarily disable foreign keys for schema alterations
     await sequelize.query('PRAGMA foreign_keys = OFF;');
 
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ force: true });
 
     // Re-enable foreign keys after sync
     await sequelize.query('PRAGMA foreign_keys = ON;');

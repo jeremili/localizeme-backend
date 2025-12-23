@@ -1,11 +1,12 @@
 import { DataTypes, Model, Optional } from 'sequelize';
+import { v7 as uuidv7 } from 'uuid';
 import { sequelize } from '../config/database';
 import LocationFiles from './LocationFiles';
 
 export interface LocationAttributes {
   id: string;
   userId: string;
-  type: 'parking' | 'magasin' | 'restaurant' | 'cafe' | 'bar' | 'hotel' | 'pharmacie' | 'station-service' | 'autre';
+  type: string;
   name?: string;
   address?: string;
   latitude: number;
@@ -24,7 +25,7 @@ interface LocationCreationAttributes extends Optional<LocationAttributes, 'id' |
 class Location extends Model<LocationAttributes, LocationCreationAttributes> implements LocationAttributes {
   public id!: string;
   public userId!: string;
-  public type!: 'parking' | 'magasin' | 'restaurant' | 'cafe' | 'bar' | 'hotel' | 'pharmacie' | 'station-service' | 'autre';
+  public type!: string;
   public name?: string;
   public address?: string;
   public latitude!: number;
@@ -42,15 +43,15 @@ Location.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: () => uuidv7(),
       primaryKey: true,
     },
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM('parking', 'magasin', 'restaurant', 'cafe', 'bar', 'hotel', 'pharmacie', 'station-service', 'autre'),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     name: {

@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
+import { v7 as uuidv7 } from 'uuid';
 
 export interface LocationFilesAttributes {
   uuid: string;
@@ -28,7 +29,7 @@ LocationFiles.init(
   {
     uuid: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: () => uuidv7(),
       allowNull: false,
       primaryKey: true,
     },
