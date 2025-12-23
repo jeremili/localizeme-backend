@@ -1,6 +1,7 @@
 import { locationRepository } from '../repositories/location';
 import { LocationAttributes } from '../../../models/Location';
 import { locationFilesRepository}  from '../repositories/locationFiles';
+import { PromiseMap } from '../../../libs/utils';
 
 export const locationService = {
   async createLocation(data: Omit<LocationAttributes, 'id' | 'createdAt' | 'updatedAt'>) {
@@ -29,7 +30,6 @@ export const locationService = {
       }
 
       // remove files from uploads if files are removed from location
-      // TODO - Promise mapping for better performance
       // TODO - move to a background job for better performance
       const files = data.files?.map((file: { filename: string }) => file.filename);
       if (data.files && location.files) {
@@ -37,14 +37,14 @@ export const locationService = {
         const filesToRemove = existingFiles.filter((file: string) => !files?.includes(file));
         const fs = await import('fs');
         const path = await import('path');
-        for (const file of filesToRemove) {
+        await PromiseMap(filesToRemove, async (file) => {
           const filePath = path.join(import.meta.dirname, '../../../../uploads', file);
           if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
           }
 
           await locationFilesRepository.deleteByFilename(file);
-        }
+        }, { concurrency: 5 });
       }
 
       if (files && files.length > 0) {
